@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+   <meta charset="utf-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+   <title>placeholder_js</title>
+   <meta name="description" content="">
+   <meta name="viewport" content="width=device-width">
+
+   <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+    <!-- modernizr js 检测该浏览器html5特性是否兼容 -->
+    <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+        
+    <style type="text/css">
+    label.ie-placeholder{
+		color: gray;
+		position: absolute;
+		cursor: text;
+	}
+    </style>
+
+
+</head>
+<body>
+
+<!-- Included JS Files -->
+
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+<![endif]-->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
+
+<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+<script>
+var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
+(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+
+
+
+<script>
+$(function(){
+	initUI();
+});
+
+function initUI(_box){
+
+	var $p = $(_box || document);
+	if(!Modernizr.input.placeholder){
+		bindIePlaceholder(_box);
+	}
+}
+
+
+/**
+ * 为ie添加placeholder事件
+ * @param参数：
+ * @edit loveless 
+ * @date 2013-4-17
+ */
+function bindIePlaceholder(_box){
+	var $p = $(_box || document);
+	$("[placeholder]",$p).each(function(){
+		var $this = $(this);
+		var placeholder = $this.attr("placeholder");
+		var val = $this.val();
+		var id = $this.attr("id");
+		var name = $this.attr("name");
+		
+		var $label = $('<label class="ie-placeholder">' + placeholder + '</label>');
+		$label.css("white-space","nowrap");
+		
+		if(id != undefined && id != ''){
+			$label.attr("for",id);
+		}else if(name != undefined && name != ''){
+			$this.attr("id","placeholder" + name);
+			$label.attr("for","placeholder" + name);
+		}
+		
+		var position = $this.position();
+		$label.css("top",position.top + 1);
+		$label.css("left",position.left + 7);
+		
+		$this.bind("focusin",function(e){
+			var oEvent = e || window.event;
+    		oEvent.preventDefault();
+			$label.hide();
+		});
+		$this.bind("blur",function(e){
+			var oEvent = e || window.event;
+    		oEvent.preventDefault();
+    		var v = $(this).val();
+    		if(v == ''){
+				$label.show();
+    		}
+		});
+		$this.before($label);
+		if(val == ''){
+			$label.show();
+		}else{
+			$label.hide();
+		}
+	});
+} 
+</script>
+
+test:<input type="text" name="j_username" placeholder="I am placeholder" required="required"/>
+
+
+
+</body>
+</html>
